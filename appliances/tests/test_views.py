@@ -112,4 +112,10 @@ class BrandViewTest(TestCase):
         data = JSONParser().parse(stream)
         self.assertEqual(data['name'], "Continental")
 
-
+    def test_brand_retrieve_with_invalid_id(self):
+        # clientAPI setUp and do not authentication
+        client = APIClient()
+        # get request and assert it was success
+        response = client.get(reverse('appliances:brand_detail', kwargs={
+                              'pk': 200}), format='json')
+        self.assertEqual(response.status_code, 404)
