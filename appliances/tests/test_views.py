@@ -32,3 +32,17 @@ class BrandViewTest(TestCase):
 
         brand = Brand.objects.get(id=4)
         self.assertEqual(brand.name, 'LG')
+
+    def test_brand_create_with_not_authenticated_user(self):
+        count = Brand.objects.all().count()
+        self.assertEqual(count, 3)
+
+        client = APIClient()
+        response = client.post(reverse('appliances:brand_list'),
+                               {
+            'name': 'LG'
+        }, format='json')
+        self.assertEqual(response.status_code, 403)
+
+        count = Brand.objects.all().count()
+        self.assertEqual(count, 3)
