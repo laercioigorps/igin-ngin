@@ -24,3 +24,11 @@ def brand_list_view(request, format=None):
             serializer.save()
             return Response(status=status.HTTP_201_CREATED)
     return Response(status=400)
+
+
+@api_view(['GET'])
+def brand_detail_view(request, pk, format=None):
+    if(request.method == 'GET'):
+        brand = Brand.objects.get(pk=pk)
+        serializer = BrandSerializer(brand)
+        return Response(serializer.data)
