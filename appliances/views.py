@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from appliances.serializers import BrandSerializer
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework import permissions
 from rest_framework import status
 from rest_framework.parsers import JSONParser
 
@@ -9,6 +10,7 @@ from rest_framework.parsers import JSONParser
 
 
 @api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
 def brand_list_view(request, format=None):
     if(request.method == 'POST'):
         data = JSONParser().parse(request)
