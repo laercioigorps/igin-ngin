@@ -66,4 +66,16 @@ class BrandViewTest(TestCase):
         data = JSONParser().parse(stream)
         self.assertEqual(len(data), 3)
 
-    
+    def test_brand_list_with_not_authenticated_user(self):
+        # assert existing brands
+        brandCount = Brand.objects.all().count()
+        self.assertEqual(brandCount, 3)
+        # clientAPI setUp and don't authenticate
+        client = APIClient()
+        # client get request and assert it was success
+        response = client.get(reverse('appliances:brand_list'), format='json')
+        self.assertEqual(response.status_code, 200)
+        # transform response into python data and assert it has len==brandCount
+        stream = io.BytesIO(response.content)
+        data = JSONParser().parse(stream)
+        self.assertEqual(len(data), 3)
