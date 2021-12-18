@@ -11,7 +11,7 @@ from rest_framework.parsers import JSONParser
 
 
 @api_view(['POST', 'GET'])
-@permission_classes([permissions.IsAuthenticated])
+@permission_classes([permissions.IsAuthenticatedOrReadOnly])
 def brand_list_view(request, format=None):
     if(request.method == 'GET'):
         brands = Brand.objects.all()
