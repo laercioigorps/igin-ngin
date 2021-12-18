@@ -1,3 +1,4 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render
 from appliances.models import Brand
 from appliances.serializers import BrandSerializer
@@ -29,6 +30,9 @@ def brand_list_view(request, format=None):
 @api_view(['GET'])
 def brand_detail_view(request, pk, format=None):
     if(request.method == 'GET'):
-        brand = Brand.objects.get(pk=pk)
+        try:
+            brand = Brand.objects.get(pk=pk)
+        except Brand.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
         serializer = BrandSerializer(brand)
         return Response(serializer.data)
