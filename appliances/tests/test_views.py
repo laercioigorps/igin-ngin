@@ -67,6 +67,7 @@ class BrandViewTest(TestCase):
         self.assertEqual(len(data), 3)
 
     def test_brand_list_with_not_authenticated_user(self):
+
         # assert existing brands
         brandCount = Brand.objects.all().count()
         self.assertEqual(brandCount, 3)
@@ -79,3 +80,36 @@ class BrandViewTest(TestCase):
         stream = io.BytesIO(response.content)
         data = JSONParser().parse(stream)
         self.assertEqual(len(data), 3)
+
+    def test_brand_retrieve_with_authenticated_user(self):
+        # get object instance and change the name
+        brand = Brand.objects.get(name="Continental")
+        brand.name = "Brasileira"
+        # clientAPI setUp and authentication
+        client = APIClient()
+        client.force_authenticate(user=self.user1)
+        # get request and assert it was success
+        response = client.get(reverse('appliances:brand_detail', kwargs={
+                              'pk': brand.id}), format='json')
+        self.assertEqual(response.status_code, 200)
+        # transform response into python data and assert it has name changed
+        stream = io.BytesIO(response.content)
+        data = JSONParser().parse(stream)
+        self.assertEqual(data['name'], "Continental")
+
+    def test_brand_retrieve_with_not_authenticated_user(self):
+        # get object instance and change the name
+        brand = Brand.objects.get(name="Continental")
+        brand.name = "Brasileira"
+        # clientAPI setUp and do not authentication
+        client = APIClient()
+        # get request and assert it was success
+        response = client.get(reverse('appliances:brand_detail', kwargs={
+                              'pk': brand.id}), format='json')
+        self.assertEqual(response.status_code, 200)
+        # transform response into python data and assert it has name changed
+        stream = io.BytesIO(response.content)
+        data = JSONParser().parse(stream)
+        self.assertEqual(data['name'], "Continental")
+
+
