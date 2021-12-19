@@ -52,3 +52,11 @@ def category_list_view(request, format=None):
         categories = Category.objects.all()
         serializer = CategorySerializer(categories, many=True)
         return Response(serializer.data)
+
+
+@api_view(['GET'])
+def category_detail_view(request, pk, format=None):
+    if(request.method == 'GET'):
+        category = Category.objects.get(pk=pk)
+        serializer = CategorySerializer(category)
+        return Response(serializer.data)
