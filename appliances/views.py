@@ -39,7 +39,7 @@ def brand_detail_view(request, pk, format=None):
         return Response(serializer.data)
 
 
-@api_view(['POST'])
+@api_view(['GET','POST'])
 @permission_classes([permissions.IsAuthenticatedOrReadOnly])
 def category_list_view(request, format=None):
     if(request.method == 'POST'):
@@ -48,3 +48,7 @@ def category_list_view(request, format=None):
         if(serializer.is_valid()):
             serializer.save()
             return Response(status=status.HTTP_201_CREATED)
+    if(request.method == 'GET'):
+        categories = Category.objects.all()
+        serializer = CategorySerializer(categories, many=True)
+        return Response(serializer.data)
