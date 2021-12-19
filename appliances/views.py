@@ -39,7 +39,7 @@ def brand_detail_view(request, pk, format=None):
         return Response(serializer.data)
 
 
-@api_view(['GET','POST'])
+@api_view(['GET', 'POST'])
 @permission_classes([permissions.IsAuthenticatedOrReadOnly])
 def category_list_view(request, format=None):
     if(request.method == 'POST'):
