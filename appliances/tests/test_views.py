@@ -173,29 +173,31 @@ class CategoryViewTest(TestCase):
         client = APIClient()
         client.force_authenticate(user=self.user1)
         # client get request and assert it was success
-        response = client.get(reverse('appliances:category_list'), format='json')
+        response = client.get(
+            reverse('appliances:category_list'), format='json')
         self.assertEqual(response.status_code, 200)
         # transform response into python data and assert it has len==categoryCount
         stream = io.BytesIO(response.content)
         data = JSONParser().parse(stream)
         self.assertEqual(len(data), 3)
 
-"""
     def test_category_list_with_not_authenticated_user(self):
-
         # assert existing categorys
         categoryCount = Category.objects.all().count()
         self.assertEqual(categoryCount, 3)
         # clientAPI setUp and don't authenticate
         client = APIClient()
         # client get request and assert it was success
-        response = client.get(reverse('appliances:category_list'), format='json')
+        response = client.get(
+            reverse('appliances:category_list'), format='json')
         self.assertEqual(response.status_code, 200)
         # transform response into python data and assert it has len==categoryCount
         stream = io.BytesIO(response.content)
         data = JSONParser().parse(stream)
         self.assertEqual(len(data), 3)
 
+
+"""
     def test_category_retrieve_with_authenticated_user(self):
         # get object instance and change the name
         category = Category.objects.get(name="Continental")
