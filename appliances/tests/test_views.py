@@ -149,62 +149,62 @@ class CategoryViewTest(TestCase):
         category = Category.objects.get(id=4)
         self.assertEqual(category.name, 'Microondas')
 
-    """ def test_category_create_with_not_authenticated_user(self):
-        # assert existing brands
-        count = Brand.objects.all().count()
+    def test_category_create_with_not_authenticated_user(self):
+        # assert existing categorys
+        count = Category.objects.all().count()
         self.assertEqual(count, 3)
         # clientAPI setUp but not authenticated
         client = APIClient()
         # post request and assert it was denied
-        response = client.post(reverse('appliances:brand_list'),
+        response = client.post(reverse('appliances:category_list'),
                                {
-            'name': 'LG'
+            'name': 'Microondas'
         }, format='json')
         self.assertEqual(response.status_code, 403)
-        # assert existing brands do not increased by one
-        count = Brand.objects.all().count()
+        # assert existing categorys do not increased by one
+        count = Category.objects.all().count()
         self.assertEqual(count, 3)
-
+"""
     def test_category_list_with_authenticated_user(self):
-        # assert existing brands
-        brandCount = Brand.objects.all().count()
-        self.assertEqual(brandCount, 3)
+        # assert existing categorys
+        categoryCount = Category.objects.all().count()
+        self.assertEqual(categoryCount, 3)
         # clientAPI setUp and authentication
         client = APIClient()
         client.force_authenticate(user=self.user1)
         # client get request and assert it was success
-        response = client.get(reverse('appliances:brand_list'), format='json')
+        response = client.get(reverse('appliances:category_list'), format='json')
         self.assertEqual(response.status_code, 200)
-        # transform response into python data and assert it has len==brandCount
+        # transform response into python data and assert it has len==categoryCount
         stream = io.BytesIO(response.content)
         data = JSONParser().parse(stream)
         self.assertEqual(len(data), 3)
 
     def test_category_list_with_not_authenticated_user(self):
 
-        # assert existing brands
-        brandCount = Brand.objects.all().count()
-        self.assertEqual(brandCount, 3)
+        # assert existing categorys
+        categoryCount = Category.objects.all().count()
+        self.assertEqual(categoryCount, 3)
         # clientAPI setUp and don't authenticate
         client = APIClient()
         # client get request and assert it was success
-        response = client.get(reverse('appliances:brand_list'), format='json')
+        response = client.get(reverse('appliances:category_list'), format='json')
         self.assertEqual(response.status_code, 200)
-        # transform response into python data and assert it has len==brandCount
+        # transform response into python data and assert it has len==categoryCount
         stream = io.BytesIO(response.content)
         data = JSONParser().parse(stream)
         self.assertEqual(len(data), 3)
 
     def test_category_retrieve_with_authenticated_user(self):
         # get object instance and change the name
-        brand = Brand.objects.get(name="Continental")
-        brand.name = "Brasileira"
+        category = Category.objects.get(name="Continental")
+        category.name = "Brasileira"
         # clientAPI setUp and authentication
         client = APIClient()
         client.force_authenticate(user=self.user1)
         # get request and assert it was success
-        response = client.get(reverse('appliances:brand_detail', kwargs={
-                              'pk': brand.id}), format='json')
+        response = client.get(reverse('appliances:category_detail', kwargs={
+                              'pk': category.id}), format='json')
         self.assertEqual(response.status_code, 200)
         # transform response into python data and assert it has name changed
         stream = io.BytesIO(response.content)
@@ -213,13 +213,13 @@ class CategoryViewTest(TestCase):
 
     def test_category_retrieve_with_not_authenticated_user(self):
         # get object instance and change the name
-        brand = Brand.objects.get(name="Continental")
-        brand.name = "Brasileira"
+        category = Category.objects.get(name="Continental")
+        category.name = "Brasileira"
         # clientAPI setUp and do not authentication
         client = APIClient()
         # get request and assert it was success
-        response = client.get(reverse('appliances:brand_detail', kwargs={
-                              'pk': brand.id}), format='json')
+        response = client.get(reverse('appliances:category_detail', kwargs={
+                              'pk': category.id}), format='json')
         self.assertEqual(response.status_code, 200)
         # transform response into python data and assert it has name changed
         stream = io.BytesIO(response.content)
@@ -230,6 +230,6 @@ class CategoryViewTest(TestCase):
         # clientAPI setUp and do not authentication
         client = APIClient()
         # get request and assert it was success
-        response = client.get(reverse('appliances:brand_detail', kwargs={
+        response = client.get(reverse('appliances:category_detail', kwargs={
                               'pk': 200}), format='json')
         self.assertEqual(response.status_code, 404) """
