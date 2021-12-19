@@ -40,6 +40,7 @@ def brand_detail_view(request, pk, format=None):
 
 
 @api_view(['POST'])
+@permission_classes([permissions.IsAuthenticatedOrReadOnly])
 def category_list_view(request, format=None):
     if(request.method == 'POST'):
         data = JSONParser().parse(request)
