@@ -164,7 +164,7 @@ class CategoryViewTest(TestCase):
         # assert existing categorys do not increased by one
         count = Category.objects.all().count()
         self.assertEqual(count, 3)
-"""
+
     def test_category_list_with_authenticated_user(self):
         # assert existing categorys
         categoryCount = Category.objects.all().count()
@@ -180,6 +180,7 @@ class CategoryViewTest(TestCase):
         data = JSONParser().parse(stream)
         self.assertEqual(len(data), 3)
 
+"""
     def test_category_list_with_not_authenticated_user(self):
 
         # assert existing categorys
