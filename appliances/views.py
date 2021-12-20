@@ -1,8 +1,8 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render
 from appliances import serializers
-from appliances.models import Brand, Category
-from appliances.serializers import BrandSerializer, CategorySerializer
+from appliances.models import Appliance, Brand, Category
+from appliances.serializers import ApplianceSerializer, BrandSerializer, CategorySerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import permissions
@@ -63,3 +63,13 @@ def category_detail_view(request, pk, format=None):
             return Response(status=status.HTTP_404_NOT_FOUND)
         serializer = CategorySerializer(category)
         return Response(serializer.data)
+
+
+@api_view(['POST'])
+def appliance_list_view(request, format=None):
+    if(request.method == 'POST'):
+        data = JSONParser().parse(request)
+        serializer = ApplianceSerializer(data=data)
+        if(serializer.is_valid()):
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
