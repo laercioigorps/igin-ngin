@@ -57,6 +57,9 @@ def category_list_view(request, format=None):
 @api_view(['GET'])
 def category_detail_view(request, pk, format=None):
     if(request.method == 'GET'):
-        category = Category.objects.get(pk=pk)
+        try:
+            category = Category.objects.get(pk=pk)
+        except Category.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
         serializer = CategorySerializer(category)
         return Response(serializer.data)
