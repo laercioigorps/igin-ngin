@@ -211,12 +211,9 @@ class CategoryViewTest(TestCase):
         data = JSONParser().parse(stream)
         self.assertEqual(data['name'], "Geladeira")
 
-
-"""
     def test_category_retrieve_with_not_authenticated_user(self):
-        # get object instance and change the name
-        category = Category.objects.get(name="Continental")
-        category.name = "Brasileira"
+        # get object instance
+        category = Category.objects.get(name="Geladeira")
         # clientAPI setUp and do not authentication
         client = APIClient()
         # get request and assert it was success
@@ -226,8 +223,10 @@ class CategoryViewTest(TestCase):
         # transform response into python data and assert it has name changed
         stream = io.BytesIO(response.content)
         data = JSONParser().parse(stream)
-        self.assertEqual(data['name'], "Continental")
+        self.assertEqual(data['name'], "Geladeira")
 
+
+"""
     def test_category_retrieve_with_invalid_id(self):
         # clientAPI setUp and do not authentication
         client = APIClient()
