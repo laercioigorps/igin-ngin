@@ -82,9 +82,8 @@ class BrandViewTest(TestCase):
         self.assertEqual(len(data), 3)
 
     def test_brand_retrieve_with_authenticated_user(self):
-        # get object instance and change the name
+        # get object instance
         brand = Brand.objects.get(name="Continental")
-        brand.name = "Brasileira"
         # clientAPI setUp and authentication
         client = APIClient()
         client.force_authenticate(user=self.user1)
@@ -98,9 +97,8 @@ class BrandViewTest(TestCase):
         self.assertEqual(data['name'], "Continental")
 
     def test_brand_retrieve_with_not_authenticated_user(self):
-        # get object instance and change the name
+        # get object instance
         brand = Brand.objects.get(name="Continental")
-        brand.name = "Brasileira"
         # clientAPI setUp and do not authentication
         client = APIClient()
         # get request and assert it was success
@@ -113,7 +111,7 @@ class BrandViewTest(TestCase):
         self.assertEqual(data['name'], "Continental")
 
     def test_brand_retrieve_with_invalid_id(self):
-        # clientAPI setUp and do not authentication
+        # clientAPI setUp and do not authenticate
         client = APIClient()
         # get request and assert it was success
         response = client.get(reverse('appliances:brand_detail', kwargs={
@@ -197,7 +195,7 @@ class CategoryViewTest(TestCase):
         self.assertEqual(len(data), 3)
 
     def test_category_retrieve_with_authenticated_user(self):
-        # get object instance and change the name
+        # get object instance
         category = Category.objects.get(name="Geladeira")
         # clientAPI setUp and authentication
         client = APIClient()
