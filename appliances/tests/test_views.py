@@ -1,5 +1,5 @@
 from django.test import TestCase
-from appliances.models import Brand, Category
+from appliances.models import Appliance, Brand, Category
 from rest_framework.test import APIClient
 from django.urls import reverse
 from django.contrib.auth.models import User
@@ -230,3 +230,50 @@ class CategoryViewTest(TestCase):
         response = client.get(reverse('appliances:category_detail', kwargs={
                               'pk': 200}), format='json')
         self.assertEqual(response.status_code, 404)
+
+
+class ApplianceViewTest(TestCase):
+    def setUp(self):
+        # initiate user
+        self.user1 = User.objects.create_user(
+            'root1', 'email1@exemple.com', 'root')
+        # initiate categories
+        self.category1 = Category.objects.create(name="Geladeira")
+        self.category2 = Category.objects.create(name="Freezer")
+        self.category3 = Category.objects.create(name="Maquina de lavar")
+        # initiate brands
+        self.brand1 = Brand.objects.create(name="Brastemp")
+        self.brand2 = Brand.objects.create(name="Electrolux")
+        self.brand3 = Brand.objects.create(name="Continental")
+        # initiate appliances
+        self.appliance1 = Appliance.objects.create(
+            model="BWC10ABANA", category=self.category3, brand=self.brand1)
+        self.appliance2 = Appliance.objects.create(
+            model="RFE39", category=self.category1, brand=self.brand2)
+        self.appliance3 = Appliance.objects.create(
+            model="DF40X", category=self.category1, brand=self.brand2)
+
+    def test_appliance_create(self):
+        # count appliances and assert
+        appliancesCount = Appliance.objects.all().count()
+        self.assertEquals(appliancesCount, 3)
+        # api client and authentication
+        client = APIClient()
+        client.force_authenticate(user=self.user1)
+        # create appliance post request
+        response = client.post(
+            reverse('appliances:appliance_list'),
+            {
+                'model': 'LT12F',
+                'category': self.category1.id,
+                'brand': self.brand1.id
+            },
+            format='json')
+        self.assertEquals(response.status_code, 201)
+        # count appliances and assert
+        appliancesCount = Appliance.objects.all().count()
+        self.assertEquals(appliancesCount, 4)
+        # search object by model and assert data
+        appliance = Appliance.objects.get(model="LT12F")
+        self.assertEquals(appliance.category, self.category1)
+        self.assertEquals(appliance.brand, self.brand1)
