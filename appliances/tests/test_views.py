@@ -253,7 +253,7 @@ class ApplianceViewTest(TestCase):
         self.appliance3 = Appliance.objects.create(
             model="DF40X", category=self.category1, brand=self.brand2)
 
-    def test_appliance_create(self):
+    def test_appliance_create_with_authenticated_user(self):
         # count appliances and assert
         appliancesCount = Appliance.objects.all().count()
         self.assertEquals(appliancesCount, 3)
