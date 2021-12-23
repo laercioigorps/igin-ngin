@@ -74,3 +74,11 @@ def appliance_list_view(request, format=None):
         if(serializer.is_valid()):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+@api_view(['GET'])
+def appliance_detail_view(request, pk, format=None):
+    if(request.method == 'GET'):
+        appliance = Appliance.objects.get(pk=pk)
+        serializer = ApplianceSerializer(appliance)
+        return Response(serializer.data)
