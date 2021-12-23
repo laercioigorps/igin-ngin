@@ -307,4 +307,18 @@ class ApplianceViewTest(TestCase):
             reverse('appliances:appliance_list'), format='json')
         self.assertEquals(response.status_code, 405)
 
-
+    def test_appliance_retrieve_with_authenticated_user(self):
+        # api client and authentication
+        client = APIClient()
+        client.force_authenticate(user=self.user1)
+        # get request by id
+        response = client.get(
+            reverse('appliances:appliance_detail', kwargs={"pk": 1}),
+            format='json')
+        self.assertEquals(response.status_code, 200)
+        # response into python and assert its fields are correct
+        stream = io.BytesIO(response.content)
+        data = JSONParser().parse(stream)
+        self.assertEquals(data['model'], self.appliance1.model)
+        self.assertEquals(data['brand'], self.appliance1.brand.id)
+        self.assertEquals(data['category'], self.appliance1.category.id)
