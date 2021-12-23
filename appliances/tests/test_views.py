@@ -337,3 +337,12 @@ class ApplianceViewTest(TestCase):
         self.assertEquals(data['model'], self.appliance1.model)
         self.assertEquals(data['brand'], self.appliance1.brand.id)
         self.assertEquals(data['category'], self.appliance1.category.id)
+
+    def test_appliance_retrieve_with_invalid_appliance_id(self):
+        # api client and authentication
+        client = APIClient()
+        # get request with invalid id
+        response = client.get(
+            reverse('appliances:appliance_detail', kwargs={"pk": 100}),
+            format='json')
+        self.assertEquals(response.status_code, 404)
