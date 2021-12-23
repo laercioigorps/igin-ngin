@@ -79,6 +79,9 @@ def appliance_list_view(request, format=None):
 @api_view(['GET'])
 def appliance_detail_view(request, pk, format=None):
     if(request.method == 'GET'):
-        appliance = Appliance.objects.get(pk=pk)
+        try:
+            appliance = Appliance.objects.get(pk=pk)
+        except Appliance.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
         serializer = ApplianceSerializer(appliance)
         return Response(serializer.data)
