@@ -282,7 +282,7 @@ class ApplianceViewTest(TestCase):
         # count appliances and assert
         appliancesCount = Appliance.objects.all().count()
         self.assertEquals(appliancesCount, 3)
-        # api client and authentication
+        # api client
         client = APIClient()
         # create appliance post request
         response = client.post(
@@ -294,3 +294,17 @@ class ApplianceViewTest(TestCase):
             },
             format='json')
         self.assertEquals(response.status_code, 403)
+
+    def test_appliance_list_with_authenticated_user(self):
+        # count appliances and assert
+        appliancesCount = Appliance.objects.all().count()
+        self.assertEquals(appliancesCount, 3)
+        # api client and authentication
+        client = APIClient()
+        client.force_authenticate(user=self.user1)
+        # list appliances get request
+        response = client.get(
+            reverse('appliances:appliance_list'), format='json')
+        self.assertEquals(response.status_code, 405)
+
+
