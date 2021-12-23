@@ -277,3 +277,20 @@ class ApplianceViewTest(TestCase):
         appliance = Appliance.objects.get(model="LT12F")
         self.assertEquals(appliance.category, self.category1)
         self.assertEquals(appliance.brand, self.brand1)
+
+    def test_appliance_create_with_not_authenticated_user(self):
+        # count appliances and assert
+        appliancesCount = Appliance.objects.all().count()
+        self.assertEquals(appliancesCount, 3)
+        # api client and authentication
+        client = APIClient()
+        # create appliance post request
+        response = client.post(
+            reverse('appliances:appliance_list'),
+            {
+                'model': 'LT12F',
+                'category': self.category1.id,
+                'brand': self.brand1.id
+            },
+            format='json')
+        self.assertEquals(response.status_code, 403)
