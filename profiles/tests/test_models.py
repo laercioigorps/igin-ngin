@@ -1,5 +1,5 @@
 from django.test import TestCase
-from profiles.models import Organization, Profile
+from profiles.models import Organization, Profile, Customer
 from django.contrib.auth.models import User
 from datetime import date
 
@@ -58,3 +58,55 @@ class ProfileModelTest(TestCase):
         self.assertEquals(user.profile.org, self.org1)
         self.assertEquals(user.first_name, "joao")
         self.assertEquals(user.profile.birth_date, date.today())
+
+
+class CustomerModelTest(TestCase):
+
+    def setUp(self):
+        # initiate user
+        self.user1 = User.objects.create_user(
+            'root1', 'email1@exemple.com', 'root')
+        self.user2 = User.objects.create_user(
+            'root2', 'email2@exemple.com', 'root')
+        self.user3 = User.objects.create_user(
+            'root3', 'email3@exemple.com', 'root')
+        # initiate organizations
+        self.org1 = Organization.objects.create(name="Eletro service")
+        self.org2 = Organization.objects.create(name="Conservice")
+        # initiate customers
+        self.customer1 = Customer.objects.create(
+            name="Jake", created_by=self.user1, org=self.org1)
+        self.customer2 = Customer.objects.create(
+            name="Maria", created_by=self.user2, org=self.org2)
+        self.customer3 = Customer.objects.create(
+            name="Carlos", created_by=self.user2, org=self.org2)
+
+    def test_create_customer(self):
+        countCustomer = Customer.objects.all().count()
+        self.assertEquals(countCustomer, 3)
+        customer = Customer.objects.create(
+            name="Jake", created_by=self.user1, org=self.org1)
+        countCustomer = Customer.objects.all().count()
+        self.assertEquals(countCustomer, 4)
+        self.assertEquals(customer.name, "Jake")
+        self.assertEquals(customer.created_by, self.user1)
+        self.assertEquals(customer.org, self.org1)
+        self.assertEquals(customer.created_on, date.today())
+        self.assertEquals(customer.is_active, True)
+
+    def test_update_customer(self):
+        self.customer3.nickName = "Carlinho"
+        self.customer3.indication = self.customer2
+        self.customer3.email = "Carlinho@hotmail.com"
+        self.customer3.fone = "91980808080"
+        self.customer3.profession = "Lawyer"
+        self.customer3.birth_date = date(year=1997, month=8, day=9)
+        self.customer3.save()
+
+        customer = Customer.objects.get(pk=self.customer3.id)
+        self.assertEquals(customer.nickName, 'Carlinho')
+        self.assertEquals(customer.indication, self.customer2)
+        self.assertEquals(customer.email, "Carlinho@hotmail.com")
+        self.assertEquals(customer.fone, '91980808080')
+        self.assertEquals(customer.profession, 'Lawyer')
+        self.assertEquals(customer.birth_date, date(year=1997, month=8, day=9))
