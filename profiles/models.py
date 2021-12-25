@@ -24,3 +24,17 @@ class Profile(models.Model):
     @receiver(post_save, sender=User)
     def save_user_profile(sender, instance, **kwargs):
         instance.profile.save()
+
+
+class Customer(models.Model):
+    name = models.CharField(max_length=30)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    org = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    created_on = models.DateField(auto_now_add=True)
+    is_active = models.BooleanField(default=True)
+    nickName = models.CharField(max_length=30, null=True)
+    indication = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
+    email = models.EmailField(null=True)
+    fone = models.CharField(max_length=30, null=True)
+    profession = models.CharField(max_length=30, null=True)
+    birth_date = models.DateField(null=True)
