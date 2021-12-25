@@ -38,3 +38,23 @@ class Customer(models.Model):
     fone = models.CharField(max_length=30, null=True)
     profession = models.CharField(max_length=30, null=True)
     birth_date = models.DateField(null=True)
+
+
+class Adress(models.Model):
+    street = models.CharField(max_length=30)
+    neighborhood = models.CharField(max_length=30)
+    city = models.CharField(max_length=30, null=True)
+    state = models.CharField(max_length=30, null=True)
+    country = models.CharField(max_length=30, default="Brasil")
+    coordinates = models.CharField(max_length=30, null=True)
+    number = models.CharField(max_length=20)
+    complement = models.CharField(max_length=40, null=True)
+    is_active = models.BooleanField(default=True)
+    type = models.CharField(max_length=30, null=True)
+
+    class Meta:
+        abstract = True
+
+
+class OrganizationAdress(Adress):
+    owner = models.ForeignKey(Organization, on_delete=models.CASCADE)
