@@ -1,5 +1,5 @@
 from django.test import TestCase
-from profiles.models import Organization, Profile, Customer, OrganizationAdress, UserAdress
+from profiles.models import CustomerAdress, Organization, Profile, Customer, OrganizationAdress, UserAdress
 from django.contrib.auth.models import User
 from datetime import date
 
@@ -177,3 +177,81 @@ class UserAdressTest(TestCase):
 
         userAdressCount = self.user1.useradress_set.all().count()
         self.assertEquals(userAdressCount, 2)
+
+
+class CustomerAdressTest(TestCase):
+    def setUp(self):
+        # initiate user
+        self.user1 = User.objects.create_user(
+            'root1', 'email1@exemple.com', 'root')
+        self.user2 = User.objects.create_user(
+            'root2', 'email2@exemple.com', 'root')
+        self.user3 = User.objects.create_user(
+            'root3', 'email3@exemple.com', 'root')
+        # initiate organizations
+        self.org1 = Organization.objects.create(name="Eletro service")
+        self.org2 = Organization.objects.create(name="Conservice")
+        # initiate customers
+        self.customer1 = Customer.objects.create(
+            name="Jake", created_by=self.user1, org=self.org1)
+        self.customer2 = Customer.objects.create(
+            name="Maria", created_by=self.user2, org=self.org2)
+        self.customer3 = Customer.objects.create(
+            name="Carlos", created_by=self.user2, org=self.org2)
+
+    def test_create_adress_and_associate_with_customer(self):
+        # count customer adresses and assert
+        customerAdressCount = CustomerAdress.objects.all().count()
+        self.assertEquals(customerAdressCount, 0)
+        # create a customer adress and associate with customer1
+        self.customer1.customeradress_set.create(
+            street="alameda José Maria Esp",
+            neighborhood="Cariri",
+            city="Castanhal", number="5")
+        # count the adresses associated with customer1 and assert
+        customerAdressCount = self.customer1.customeradress_set.all().count()
+        self.assertEquals(customerAdressCount, 1)
+
+    def test_create_multiple_adress_and_associate_with_customer(self):
+        # count customer adresses and assert
+        customerAdressCount = CustomerAdress.objects.all().count()
+        self.assertEquals(customerAdressCount, 0)
+        # create a customer adress and associate with customer1
+        self.customer1.customeradress_set.create(
+            street="alameda José Maria Esp",
+            neighborhood="Cariri", city="Castanhal",
+            number="5")
+        # count the adresses associated with customer1 and assert
+        customerAdressCount = self.customer1.customeradress_set.all().count()
+        self.assertEquals(customerAdressCount, 1)
+        # create a customer adress and associate with customer1
+        self.customer1.customeradress_set.create(
+            street="alameda Imperial", neighborhood="São josé",
+            city="Castanhal", number="50")
+        # count the adresses associated with customer1 and assert
+        customerAdressCount = self.customer1.customeradress_set.all().count()
+        self.assertEquals(customerAdressCount, 2)
+
+    def test_create_adress_and_associate_with_multiple_customers(self):
+        # count the customer adresses and assert
+        customerAdressCount = CustomerAdress.objects.all().count()
+        self.assertEquals(customerAdressCount, 0)
+        # create a customer adress
+        customerAdress = CustomerAdress.objects.create(
+            street="alameda José Maria Esp", neighborhood="Cariri", city="Castanhal", number="5")
+        # count the customer adresses and assert
+        customerAdressCount = CustomerAdress.objects.all().count()
+        self.assertEquals(customerAdressCount, 1)
+        # count the number of owner the adress has and assert
+        ownerAdressCount = customerAdress.owner.all().count()
+        self.assertEquals(ownerAdressCount, 0)
+        # add owner to the adress
+        customerAdress.owner.add(self.customer1)
+        # count the number of owner the adress has and assert
+        ownerAdressCount = customerAdress.owner.all().count()
+        self.assertEquals(ownerAdressCount, 1)
+        # add another owner to the adress
+        customerAdress.owner.add(self.customer2)
+        # count the number of owner the adress has and assert
+        ownerAdressCount = customerAdress.owner.all().count()
+        self.assertEquals(ownerAdressCount, 2)
