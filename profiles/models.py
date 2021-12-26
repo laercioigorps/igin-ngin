@@ -62,3 +62,7 @@ class OrganizationAdress(Adress):
 
 class UserAdress(Adress):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
+class CustomerAdress(Adress):
+    owner = models.ManyToManyField(Customer)
