@@ -58,3 +58,7 @@ class Adress(models.Model):
 
 class OrganizationAdress(Adress):
     owner = models.ForeignKey(Organization, on_delete=models.CASCADE)
+
+
+class UserAdress(Adress):
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
