@@ -1,5 +1,5 @@
 from django.test import TestCase
-from profiles.models import Organization, Profile, Customer, OrganizationAdress
+from profiles.models import Organization, Profile, Customer, OrganizationAdress, UserAdress
 from django.contrib.auth.models import User
 from datetime import date
 
@@ -142,3 +142,38 @@ class OrganizationAdressTest(TestCase):
 
         orgAdressCount = self.org1.organizationadress_set.all().count()
         self.assertEquals(orgAdressCount, 2)
+
+
+class UserAdressTest(TestCase):
+    def setUp(self):
+        self.user1 = User.objects.create_user(
+            'root1', 'email1@exemple.com', 'root')
+        self.user2 = User.objects.create_user(
+            'root2', 'email2@exemple.com', 'root')
+        self.user3 = User.objects.create_user(
+            'root3', 'email3@exemple.com', 'root')
+
+    def test_create_adress_and_associate_with_organization(self):
+        userAdressCount = UserAdress.objects.all().count()
+        self.assertEquals(userAdressCount, 0)
+        UserAdress.objects.create(
+            street="alameda José Maria Esp", neighborhood="Cariri",
+            city="Castanhal", number="5", owner=self.user1)
+        userAdressCount = self.user1.useradress_set.all().count()
+        self.assertEquals(userAdressCount, 1)
+
+    def test_create_multiple_adress_and_associate_with_user(self):
+        userAdressCount = UserAdress.objects.all().count()
+        self.assertEquals(userAdressCount, 0)
+        UserAdress.objects.create(
+            street="alameda José Maria Esp", neighborhood="Cariri",
+            city="Castanhal", number="5", owner=self.user1)
+        userAdressCount = self.user1.useradress_set.all().count()
+        self.assertEquals(userAdressCount, 1)
+
+        UserAdress.objects.create(
+            street="alameda Imperial", neighborhood="São josé",
+            city="Castanhal", number="50", owner=self.user1)
+
+        userAdressCount = self.user1.useradress_set.all().count()
+        self.assertEquals(userAdressCount, 2)
