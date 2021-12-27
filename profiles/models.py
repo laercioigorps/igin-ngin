@@ -65,4 +65,12 @@ class UserAdress(Adress):
 
 
 class CustomerAdress(Adress):
-    owner = models.ManyToManyField(Customer)
+    owner = models.ManyToManyField(Customer, through='AdressAssociation')
+
+
+class AdressAssociation(models.Model):
+    customerAdress = models.ForeignKey(
+        CustomerAdress, on_delete=models.CASCADE)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    is_associated = models.BooleanField(default=True)
+    last_modified = models.DateField(auto_now=True)
