@@ -1,5 +1,5 @@
 from django.test import TestCase
-from profiles.models import CustomerAdress, Organization, Profile, Customer, OrganizationAdress, UserAdress
+from profiles.models import AdressAssociation, CustomerAdress, Organization, Profile, Customer, OrganizationAdress, UserAdress
 from django.contrib.auth.models import User
 from datetime import date
 
@@ -255,3 +255,23 @@ class CustomerAdressTest(TestCase):
         # count the number of owner the adress has and assert
         ownerAdressCount = customerAdress.owner.all().count()
         self.assertEquals(ownerAdressCount, 2)
+
+    def test_create_adress_and_adress_association_with_customer(self):
+        # create a customer adress
+        customerAdress = CustomerAdress.objects.create(
+            street="alameda José Maria Esp",
+            neighborhood="Cariri",
+            city="Castanhal", number="5")
+        # count adress association and assert
+        adressAssociationCount = AdressAssociation.objects.all().count()
+        self.assertEquals(adressAssociationCount, 0)
+        # add new owner to adress
+        customerAdress.owner.add(self.customer1)
+        # count adress association and assert
+        adressAssociationCount = AdressAssociation.objects.all().count()
+        self.assertEquals(adressAssociationCount, 1)
+        # get adress association with customer1 and assert
+        association = customerAdress.adressassociation_set.get(
+            customer=self.customer1)
+        self.assertEquals(association.is_associated, True)
+        self.assertEquals(association.last_modified, date.today())
