@@ -1,5 +1,7 @@
 from django.test import TestCase
-from profiles.models import AdressAssociation, CustomerAdress, Organization, Profile, Customer, OrganizationAdress, UserAdress
+from profiles.models import (AdressAssociation, CustomerAdress,
+                             Organization, Profile, Customer,
+                             OrganizationAdress, UserAdress)
 from django.contrib.auth.models import User
 from datetime import date
 
@@ -238,7 +240,10 @@ class CustomerAdressTest(TestCase):
         self.assertEquals(customerAdressCount, 0)
         # create a customer adress
         customerAdress = CustomerAdress.objects.create(
-            street="alameda José Maria Esp", neighborhood="Cariri", city="Castanhal", number="5")
+            street="alameda José Maria Esp",
+            neighborhood="Cariri",
+            city="Castanhal",
+            number="5")
         # count the customer adresses and assert
         customerAdressCount = CustomerAdress.objects.all().count()
         self.assertEquals(customerAdressCount, 1)
